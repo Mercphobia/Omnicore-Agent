@@ -1,0 +1,58 @@
+# VCS
+.git/
+.gitignore
+.gitattributes
+.gitmodules
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg
+
+# Rust artifacts (keep source — just exclude build output)
+rust/target/
+
+# Go binaries (keep source — just exclude compiled output)
+*.exe
+*.test
+
+# Secrets & environment
+.env
+*.key
+master.key
+*.pem
+*.p12
+credentials.json
+service-account.json
+
+# Generated / tool output
+*.bak
+*.tmp
+*.swp
+*.swo
+*~
+# Tool-generated dirs
+tools/generated/
+generated/
+
+# IDE & editor
+.idea/
+.vscode/
+*.sublime-*
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Docker (don't ship Docker in Docker)
+Dockerfile
+docker-compose*.yml
+.dockerignore

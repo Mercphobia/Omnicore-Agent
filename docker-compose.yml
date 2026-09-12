@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  omnicore:
+    build: .
+    container_name: omnicore
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./config:/root/.omnicore:rw
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - postgres
+    healthcheck:
+      test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health').raise_for_status()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: omnicore-redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    profiles:
+      - full
+      - cache
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: omnicore-postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=omnicore
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-omnicore}
+      - POSTGRES_DB=omnicore
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    profiles:
+      - full
+      - memory
+
+volumes:
+  redis_data:
+  postgres_data:

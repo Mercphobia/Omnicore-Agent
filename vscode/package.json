@@ -1,0 +1,39 @@
+{
+  "name": "omnicore-agent",
+  "displayName": "OmniCore Agent",
+  "description": "Autonomous hyper-agent inside VS Code — code, security, refactor, explain",
+  "version": "3.0.0",
+  "publisher": "Mercphobia",
+  "engines": {"vscode": "^1.90.0"},
+  "categories": ["Other", "Programming Languages"],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {"command": "omnicore.chat", "title": "Chat with OmniCore"},
+      {"command": "omnicore.explain", "title": "Explain selected code"},
+      {"command": "omnicore.refactor", "title": "Refactor selected code"},
+      {"command": "omnicore.securityScan", "title": "Security scan file"},
+      {"command": "omnicore.generateTests", "title": "Generate tests"},
+      {"command": "omnicore.codeReview", "title": "Code review"}
+    ],
+    "keybindings": [
+      {"command": "omnicore.chat", "key": "ctrl+shift+o", "mac": "cmd+shift+o"}
+    ],
+    "configuration": {
+      "title": "OmniCore Agent",
+      "properties": {
+        "omnicore.apiUrl": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "OmniCore API server URL"
+        },
+        "omnicore.apiKey": {
+          "type": "string",
+          "default": "",
+          "description": "API key (OpenAI, OpenRouter, etc.)"
+        }
+      }
+    }
+  }
+}

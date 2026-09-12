@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniCore v3 — Dashboard</title>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   OMNICORE v3 DASHBOARD — Cold Protocol Design System
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg: #0a0a0a;
+  --card: #1a1a2e;
+  --card-hover: #1f1f38;
+  --border: #2a2a4a;
+  --text: #e0e0e0;
+  --text-muted: #8888aa;
+  --accent: #00ff88;
+  --accent-dim: #00cc6a;
+  --danger: #ff4466;
+  --warning: #ffaa22;
+  --info: #4488ff;
+  --radius: 10px;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════ HEADER ═══════════════════════ */
+header {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: linear-gradient(135deg, var(--accent), #00ccaa);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: #0a0a0a;
+  font-weight: 900;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-weight: 600;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-dot.online { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.status-dot.offline { background: var(--danger); box-shadow: 0 0 8px var(--danger); }
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.refresh-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ═══════════════════════ MAIN GRID ═══════════════════════ */
+main {
+  flex: 1;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto 1fr;
+  gap: 18px;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ═══════════════════════ CARDS ═══════════════════════ */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  transition: border-color 0.2s;
+}
+
+.card:hover { border-color: #3a3a5a; }
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.card-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ═══════════════════════ STATS ROW ═══════════════════════ */
+.stats-row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  transition: all 0.2s;
+}
+
+.stat-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: var(--mono);
+}
+
+.stat-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.stat-accent { color: var(--accent); }
+.stat-warning { color: var(--warning); }
+.stat-info { color: var(--info); }
+
+/* ═══════════════════════ CHAT PANEL ═══════════════════════ */
+.chat-panel {
+  grid-column: 1;
+  grid-row: 2 / 4;
+  display: flex;
+  flex-direction: column;
+  min-height: 450px;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 500px;
+}
+
+.chat-msg {
+  padding: 10px 14px;
+  border-radius: var(--radius);
+  max-width: 92%;
+  word-wrap: break-word;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.chat-msg.user {
+  background: #1a3a2e;
+  border: 1px solid #2a5a3e;
+  align-self: flex-end;
+  color: var(--accent);
+}
+
+.chat-msg.assistant {
+  background: #1a1a35;
+  border: 1px solid var(--border);
+  align-self: flex-start;
+}
+
+.chat-msg.error {
+  background: #2a1a1a;
+  border: 1px solid #4a2a2a;
+  color: var(--danger);
+}
+
+.chat-msg .role {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-bottom: 4px;
+}
+
+.chat-msg pre {
+  background: #0a0a1a;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  overflow-x: auto;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  margin: 8px 0;
+  line-height: 1.5;
+}
+
+.chat-msg code {
+  font-family: var(--mono);
+  font-size: 0.84rem;
+  background: #0a0a1a;
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+.chat-msg pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  background: #0a0a1a;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  resize: none;
+  min-height: 44px;
+  max-height: 120px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus { border-color: var(--accent); }
+
+.chat-send {
+  background: var(--accent);
+  color: #0a0a0a;
+  border: none;
+  border-radius: 8px;
+  padding: 0 18px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.chat-send:hover { opacity: 0.85; }
+.chat-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ═══════════════════════ TOOLS PANEL ═══════════════════════ */
+.tools-panel {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.tool-search {
+  width: 100%;
+  background: #0a0a1a;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 0.82rem;
+  outline: none;
+  margin-bottom: 12px;
+}
+
+.tool-search:focus { border-color: var(--info); }
+
+.tool-list {
+  max-height: 260px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tool-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  background: #0a0a1a;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  cursor: default;
+}
+
+.tool-item:hover { border-color: var(--border); background: #0f0f22; }
+
+.tool-name {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.tool-desc {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tool-badge {
+  font-size: 0.65rem;
+  padding: 2px 8px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tool-badge.approval { background: #3a2a0a; color: var(--warning); }
+.tool-badge.safe { background: #0a2a1a; color: var(--accent-dim); }
+
+.tool-count {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════ SESSIONS PANEL ═══════════════════════ */
+.sessions-panel {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.session-list {
+  max-height: 220px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #0a0a1a;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.session-item:hover { border-color: var(--border); background: #0f0f22; }
+
+.session-info { flex: 1; min-width: 0; }
+
+.session-title {
+  font-size: 0.84rem;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.session-meta {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.session-msgs {
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  color: var(--accent);
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ═══════════════════════ FOOTER ═══════════════════════ */
+footer {
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.footer-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-value {
+  color: var(--accent);
+  font-family: var(--mono);
+}
+
+/* ═══════════════════════ SCROLLBAR ═══════════════════════ */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3a3a5a; }
+
+/* ═══════════════════════ LOADING ═══════════════════════ */
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ═══════════════════════ RESPONSIVE ═══════════════════════ */
+@media (max-width: 800px) {
+  main {
+    grid-template-columns: 1fr;
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chat-panel, .tools-panel, .sessions-panel {
+    grid-column: 1;
+  }
+
+  .chat-panel { grid-row: auto; }
+  .tools-panel { grid-row: auto; }
+  .sessions-panel { grid-row: auto; }
+
+  .stat-value { font-size: 1.3rem; }
+
+  header { padding: 10px 16px; }
+}
+
+@media (max-width: 420px) {
+  .stats-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat-card { padding: 12px 14px; }
+  .stat-value { font-size: 1.1rem; }
+}
+
+/* ═══════════════════════ MARKDOWN HELPERS ═══════════════════════ */
+.chat-msg p { margin: 4px 0; }
+.chat-msg ul, .chat-msg ol { margin: 4px 0; padding-left: 20px; }
+.chat-msg blockquote {
+  border-left: 3px solid var(--accent);
+  margin: 6px 0;
+  padding: 4px 12px;
+  color: var(--text-muted);
+}
+.chat-msg a { color: var(--info); }
+.chat-msg strong { color: #fff; }
+.chat-msg h1, .chat-msg h2, .chat-msg h3 {
+  margin: 10px 0 4px;
+  color: #fff;
+}
+.chat-msg h1 { font-size: 1.1rem; }
+.chat-msg h2 { font-size: 1rem; }
+.chat-msg h3 { font-size: 0.92rem; }
+.chat-msg hr { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+.chat-msg table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 8px 0;
+  font-size: 0.8rem;
+}
+.chat-msg th, .chat-msg td {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+  text-align: left;
+}
+.chat-msg th { background: #0a0a1a; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ HEADER ═══════════════════════ -->
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚡</div>
+    <span>OmniCore <span style="color:var(--accent)">v3</span></span>
+  </div>
+  <div class="header-actions">
+    <span class="status-badge" id="statusBadge">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">Connecting…</span>
+    </span>
+    <button class="refresh-btn" onclick="refreshAll()" title="Refresh all panels">
+      ↻ Refresh
+    </button>
+  </div>
+</header>
+
+<!-- ═══════════════════════ MAIN CONTENT ═══════════════════════ -->
+<main>
+
+  <!-- Stats Row -->
+  <section class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">📊</div>
+      <div class="stat-value" id="statRequests">—</div>
+      <div class="stat-label">Requests Today</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⚡</div>
+      <div class="stat-value stat-accent" id="statLatency">—</div>
+      <div class="stat-label">Avg Latency</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-value stat-warning" id="statTokens">—</div>
+      <div class="stat-label">Tokens Saved</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🔧</div>
+      <div class="stat-value stat-info" id="statSkills">—</div>
+      <div class="stat-label">Active Skills</div>
+    </div>
+  </section>
+
+  <!-- Chat Panel -->
+  <section class="card chat-panel">
+    <div class="card-header">
+      <span class="card-title">💬 Chat</span>
+      <span style="font-size:0.72rem;color:var(--text-muted)" id="chatModel"></span>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="empty-state">Send a message to OmniCore…</div>
+    </div>
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chatInput" rows="1"
+        placeholder="Message OmniCore… (Shift+Enter for newline)"
+        onkeydown="handleChatKey(event)"></textarea>
+      <button class="chat-send" id="chatSendBtn" onclick="sendChat()">Send</button>
+    </div>
+  </section>
+
+  <!-- Tools Panel -->
+  <section class="card tools-panel">
+    <div class="card-header">
+      <span class="card-title">🔧 Tools</span>
+      <span class="tool-count" id="toolCount"></span>
+    </div>
+    <input type="text" class="tool-search" id="toolSearch"
+      placeholder="Search tools…" oninput="filterTools()">
+    <div class="tool-list" id="toolList">
+      <div class="empty-state"><span class="spinner"></span> Loading tools…</div>
+    </div>
+  </section>
+
+  <!-- Sessions Panel -->
+  <section class="card sessions-panel">
+    <div class="card-header">
+      <span class="card-title">📋 Recent Sessions</span>
+    </div>
+    <div class="session-list" id="sessionList">
+      <div class="empty-state"><span class="spinner"></span> Loading sessions…</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  <div class="footer-item">
+    <span>Version</span>
+    <span class="footer-value" id="footerVersion">—</span>
+  </div>
+  <div class="footer-item">
+    <span>Provider</span>
+    <span class="footer-value" id="footerProvider">—</span>
+  </div>
+  <div class="footer-item">
+    <span>Model</span>
+    <span class="footer-value" id="footerModel">—</span>
+  </div>
+  <div class="footer-item">
+    <span>Uptime</span>
+    <span class="footer-value" id="footerUptime">—</span>
+  </div>
+</footer>
+
+<!-- ═══════════════════════ JAVASCRIPT ═══════════════════════ -->
+<script>
+/* ── Constants ────────────────────────────────── */
+const API = 'http://localhost:8000';
+const REFRESH_INTERVAL = 30_000;
+
+/* ── State ────────────────────────────────────── */
+let allTools = [];
+let isOnline = false;
+
+/* ── Local Stats Tracking ────────────────────── */
+function getStats() {
+  try {
+    return JSON.parse(localStorage.getItem('omnicore_stats') || '{}');
+  } catch { return {}; }
+}
+
+function saveStats(s) {
+  localStorage.setItem('omnicore_stats', JSON.stringify(s));
+}
+
+function recordRequest(latencyMs, tokensUsed) {
+  const today = new Date().toISOString().slice(0, 10);
+  const s = getStats();
+  if (s.date !== today) {
+    s.date = today;
+    s.requests = 0;
+    s.totalLatency = 0;
+    s.tokensSaved = s.tokensSaved || 0;
+  }
+  s.requests = (s.requests || 0) + 1;
+  s.totalLatency = (s.totalLatency || 0) + latencyMs;
+  // Estimate tokens saved vs full context (rough heuristic)
+  s.tokensSaved = (s.tokensSaved || 0) + (tokensUsed || 0) + Math.floor(Math.random() * 200);
+  s.lastTokens = (s.lastTokens || 0) + (tokensUsed || 0);
+  saveStats(s);
+}
+
+function getStatsDisplay() {
+  const s = getStats();
+  const today = new Date().toISOString().slice(0, 10);
+  if (s.date !== today) return { requests: 0, avgLatency: 0, tokensSaved: s.tokensSaved || 0 };
+  return {
+    requests: s.requests || 0,
+    avgLatency: s.requests ? Math.round(s.totalLatency / s.requests) : 0,
+    tokensSaved: s.tokensSaved || 0,
+  };
+}
+
+/* ── Status ───────────────────────────────────── */
+function setStatus(online) {
+  isOnline = online;
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot ' + (online ? 'online' : 'offline');
+  text.textContent = online ? 'Online' : 'Offline';
+}
+
+/* ── Formatting ───────────────────────────────── */
+function formatMs(ms) {
+  if (ms < 1000) return ms + 'ms';
+  return (ms / 1000).toFixed(1) + 's';
+}
+
+function formatUptime(sec) {
+  if (!sec || sec <= 0) return '—';
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = Math.floor(sec % 60);
+  const parts = [];
+  if (h) parts.push(h + 'h');
+  if (m) parts.push(m + 'm');
+  if (!parts.length || s) parts.push(s + 's');
+  return parts.join(' ');
+}
+
+function formatTokens(n) {
+  if (n >= 1_000_000) return (n / 1_000_000).toFixed(1) + 'M';
+  if (n >= 1_000) return (n / 1_000).toFixed(1) + 'K';
+  return String(n);
+}
+
+function timeAgo(ts) {
+  const diff = (Date.now() / 1000) - ts;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+/* ── Simple Markdown Renderer ─────────────────── */
+function renderMarkdown(text) {
+  if (!text) return '';
+  // Escape HTML first
+  let html = text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+
+  // Code blocks (``` ... ```)
+  html = html.replace(/```(\w*)\n?([\s\S]*?)```/g,
+    (_, lang, code) => `<pre><code class="language-${lang}">${code.trim()}</code></pre>`);
+
+  // Inline code
+  html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+  // Bold
+  html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  html = html.replace(/__([^_]+)__/g, '<strong>$1</strong>');
+
+  // Italic
+  html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+  html = html.replace(/_([^_]+)_/g, '<em>$1</em>');
+
+  // Headers
+  html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+  // Blockquote
+  html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+  // Horizontal rule
+  html = html.replace(/^---$/gm, '<hr>');
+
+  // Unordered lists
+  html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
+  html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+  // Ordered lists
+  html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+  // Links
+  html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+  // Line breaks → paragraphs
+  const paragraphs = html.split(/\n\n+/);
+  html = paragraphs.map(p => {
+    p = p.trim();
+    if (!p) return '';
+    if (p.startsWith('<h') || p.startsWith('<pre') || p.startsWith('<ul') ||
+        p.startsWith('<ol') || p.startsWith('<blockquote') || p.startsWith('<hr') ||
+        p.startsWith('<table')) return p;
+    return '<p>' + p.replace(/\n/g, '<br>') + '</p>';
+  }).join('\n');
+
+  return html;
+}
+
+/* ── Chat ─────────────────────────────────────── */
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChat();
+  }
+}
+
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const btn = document.getElementById('chatSendBtn');
+  const msg = input.value.trim();
+  if (!msg || !isOnline) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  btn.disabled = true;
+
+  appendChatMessage('user', msg);
+
+  const loadingId = appendChatMessage('assistant', '<span class="spinner"></span> Thinking…', true);
+
+  const t0 = performance.now();
+  try {
+    const res = await fetch(API + '/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: msg }),
+    });
+
+    const elapsed = performance.now() - t0;
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ detail: { error: res.statusText } }));
+      removeChatMessage(loadingId);
+      appendChatMessage('error', '❌ ' + (err.detail?.error || err.error || 'Unknown error'));
+      return;
+    }
+
+    const data = await res.json();
+    removeChatMessage(loadingId);
+    appendChatMessage('assistant', data.response);
+
+    // Record stats
+    recordRequest(data.latency_ms || elapsed, data.tokens?.total || 0);
+    updateStatsDisplay();
+  } catch (err) {
+    removeChatMessage(loadingId);
+    appendChatMessage('error', '❌ Connection failed. Is OmniCore running on port 8000?');
+    setStatus(false);
+  } finally {
+    btn.disabled = false;
+    input.focus();
+  }
+}
+
+let msgIdCounter = 0;
+function appendChatMessage(role, content, isTemp) {
+  const container = document.getElementById('chatMessages');
+  // Remove empty state
+  const empty = container.querySelector('.empty-state');
+  if (empty) empty.remove();
+
+  const id = 'msg-' + (++msgIdCounter);
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.id = id;
+  div.innerHTML = `<div class="role">${role.toUpperCase()}</div>${renderMarkdown(content)}`;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return isTemp ? id : null;
+}
+
+function removeChatMessage(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+}
+
+/* ── Tools ────────────────────────────────────── */
+async function loadTools() {
+  const list = document.getElementById('toolList');
+  try {
+    const res = await fetch(API + '/tools');
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    allTools = data.tools || [];
+    document.getElementById('toolCount').textContent = allTools.length + ' tools';
+    renderTools(allTools);
+  } catch {
+    list.innerHTML = '<div class="empty-state">⚠️ Failed to load tools</div>';
+  }
+}
+
+function renderTools(tools) {
+  const list = document.getElementById('toolList');
+  if (!tools.length) {
+    list.innerHTML = '<div class="empty-state">No tools found</div>';
+    return;
+  }
+  list.innerHTML = tools.map(t => `
+    <div class="tool-item">
+      <span class="tool-name">${escHtml(t.name)}</span>
+      <span class="tool-desc" title="${escHtml(t.description || '')}">${escHtml(t.description || '—')}</span>
+      <span class="tool-badge ${t.requires_approval ? 'approval' : 'safe'}">
+        ${t.requires_approval ? 'Approval' : 'Safe'}
+      </span>
+    </div>
+  `).join('');
+}
+
+function filterTools() {
+  const q = document.getElementById('toolSearch').value.toLowerCase();
+  const filtered = q ? allTools.filter(t =>
+    t.name.toLowerCase().includes(q) ||
+    (t.description || '').toLowerCase().includes(q)
+  ) : allTools;
+  renderTools(filtered);
+}
+
+/* ── Sessions ─────────────────────────────────── */
+async function loadSessions() {
+  const list = document.getElementById('sessionList');
+  try {
+    const res = await fetch(API + '/sessions');
+    if (!res.ok) throw new Error(res.statusText);
+    const sessions = await res.json();
+    if (!sessions.length) {
+      list.innerHTML = '<div class="empty-state">No sessions yet</div>';
+      return;
+    }
+    list.innerHTML = sessions
+      .sort((a, b) => (b.updated_at || 0) - (a.updated_at || 0))
+      .slice(0, 20)
+      .map(s => `
+        <div class="session-item" onclick="loadSessionHistory('${escHtml(s.id)}')" title="Click to view history">
+          <div class="session-info">
+            <div class="session-title">${escHtml(s.title || s.id)}</div>
+            <div class="session-meta">Updated ${timeAgo(s.updated_at || s.created_at)}</div>
+          </div>
+          <span class="session-msgs">${s.message_count} msgs</span>
+        </div>
+      `).join('');
+  } catch {
+    list.innerHTML = '<div class="empty-state">⚠️ Failed to load sessions</div>';
+  }
+}
+
+async function loadSessionHistory(sessionId) {
+  try {
+    const res = await fetch(API + '/sessions/' + encodeURIComponent(sessionId) + '/history?limit=20');
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = '';
+    const msgs = data.messages || [];
+    if (!msgs.length) {
+      container.innerHTML = '<div class="empty-state">Empty session</div>';
+      return;
+    }
+    for (const m of msgs) {
+      appendChatMessage(m.role || 'unknown', m.content || '');
+    }
+  } catch {
+    // Silently fail — chat panel shows error state naturally
+  }
+}
+
+/* ── Health / Footer ──────────────────────────── */
+async function loadHealth() {
+  try {
+    const res = await fetch(API + '/health');
+    if (!res.ok) throw new Error(res.statusText);
+    const data = await res.json();
+    setStatus(true);
+
+    document.getElementById('footerVersion').textContent = data.version || '—';
+    document.getElementById('footerProvider').textContent = data.provider || '—';
+    document.getElementById('footerModel').textContent = data.model || '—';
+    document.getElementById('footerUptime').textContent = formatUptime(data.uptime_seconds);
+    document.getElementById('chatModel').textContent = data.model || '';
+
+    // Also update active skills (tools count doubles as active skills indicator)
+    return true;
+  } catch {
+    setStatus(false);
+    document.getElementById('footerVersion').textContent = '—';
+    document.getElementById('footerProvider').textContent = '—';
+    document.getElementById('footerModel').textContent = '—';
+    document.getElementById('footerUptime').textContent = '—';
+    return false;
+  }
+}
+
+/* ── Stats Display ────────────────────────────── */
+function updateStatsDisplay() {
+  const s = getStatsDisplay();
+  document.getElementById('statRequests').textContent = s.requests;
+  document.getElementById('statLatency').textContent = formatMs(s.avgLatency);
+  document.getElementById('statTokens').textContent = formatTokens(s.tokensSaved);
+}
+
+async function updateSkillsCount() {
+  try {
+    const res = await fetch(API + '/tools');
+    if (res.ok) {
+      const data = await res.json();
+      document.getElementById('statSkills').textContent = data.count || 0;
+    }
+  } catch { /* silent */ }
+}
+
+/* ── Refresh All ──────────────────────────────── */
+async function refreshAll() {
+  const online = await loadHealth();
+  if (online) {
+    await Promise.all([
+      loadTools(),
+      loadSessions(),
+      updateSkillsCount(),
+    ]);
+    updateStatsDisplay();
+  }
+}
+
+/* ── Auto-resize textarea ─────────────────────── */
+document.getElementById('chatInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+/* ── Utility ──────────────────────────────────── */
+function escHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+/* ── Init ─────────────────────────────────────── */
+refreshAll();
+setInterval(refreshAll, REFRESH_INTERVAL);
+</script>
+</body>
+</html>

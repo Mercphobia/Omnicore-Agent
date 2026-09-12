@@ -1,0 +1,16 @@
+{
+  "name": "omnicore-agent",
+  "version": "3.0.0",
+  "description": "OmniCore Agent SDK — Autonomous hyper-agent for JavaScript/TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": ["ai", "agent", "autonomous", "omnicore", "cybersecurity", "llm"],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}
