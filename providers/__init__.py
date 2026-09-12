@@ -1,0 +1,1 @@
+"""Provider package — AI model backends, router, composite."""
